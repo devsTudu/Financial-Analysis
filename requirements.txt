@@ -1,0 +1,30 @@
+# General
+requests
+
+pycountry
+pandas
+numpy
+plotly
+
+# UI
+streamlit
+
+# Data Source
+pypdf
+yfinance
+langchain-text-splitters
+googlesearch-python
+
+# Data Storage
+sqlalchemy
+pgvector
+pytz
+
+
+# LLM
+agno
+
+langchain
+langchain-community
+langchain-core
+langchain[google-genai] 
