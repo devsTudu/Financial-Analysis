@@ -1,19 +1,33 @@
-import streamlit as st
 import os
+from dotenv import load_dotenv
+
+import streamlit as st
+
+load_dotenv()
+
+
+# Auth
+username = st.sidebar.text_input("username", type="default")
+password = st.sidebar.text_input("password", type="password")
+st.sidebar.divider()
 
 # Define the Pages
-main_page = st.Page("pages\\mainPage.py",
-                        title="Main Page",
-                        icon="🏠")
-analyst_page = st.Page("pages\\analystPage.py",
-                        title="As Analyst",
-                        icon="🕵🏻")
-manager_page = st.Page("pages\\managerPage.py",
-                        title="As Manager", 
-                        icon="👨🏻‍💼")
+main_page = st.Page("pages\\mainPage.py", title="Guest Page", icon="🏠")
+analyst_page = st.Page("pages\\analystPage.py", title="Analyst", icon="🕵🏻")
+manager_page = st.Page("pages\\managerPage.py", title="Manager", icon="👨🏻‍💼")
 
-pg = st.navigation([main_page, analyst_page, manager_page])
+
+log_in = main_page
+if username == password:
+    if username == "analyst":
+        log_in = analyst_page
+    elif username == "manager":
+        log_in = manager_page
+
+
+pg = st.navigation([log_in])
 pg.run()
+
 
 # LLM
 st.sidebar.divider()

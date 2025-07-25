@@ -1,6 +1,11 @@
-from .data_loader import YahooFinance
+import json
 from pandas import DataFrame
 import streamlit as st
+
+from agno.tools import Toolkit
+
+
+from .data_loader import YahooFinance
 
 yf = YahooFinance()
 
@@ -9,62 +14,46 @@ yf = YahooFinance()
 def getFinancials(symbol):
     return yf.get(symbol)
 
+
 @st.cache_data
 def getRatios(symbol):
     return yf.ratios(symbol)
 
 
-## Not using anymore
-def calculate_performance_ratios(data_df: DataFrame):
-    """
-    Calculates various performance ratios from a transposed balance sheet
-      DataFrame.
+def getFinancialData(symbol: str):
+    """Use this function to get fundamental data for a given stock symbol yfinance API.
 
     Args:
-        data_df: A pandas DataFrame containing transposed balance sheet data,
-                 with financial line items as columns and years as index.
-
+        symbol (str): The stock symbol.
     Returns:
-        A pandas DataFrame with calculated performance ratios.
+        str: JSON string of the financial data
     """
-    # Check the Data Frame
-    if data_df.index.dtype == "O":
-        data_df = data_df.transpose()
 
-    performance_ratios = DataFrame(index=data_df.index)
+    try:
+        data = yf.get(symbol)
+        return json.dumps(data.to_json())
+    except Exception as e:
+        return f"Failed getting Financials for {symbol}"
 
-    # Calculate Liquidity Ratios
-    if "Current Assets" in data_df.columns and "Current Liabilities" in data_df.columns:
-        performance_ratios["Current Ratio"] = (
-            data_df["Current Assets"] / data_df["Current Liabilities"]
-        )
-        if "Inventory" in data_df.columns:
-            performance_ratios["Quick Ratio"] = (
-                data_df["Current Assets"] - data_df["Inventory"]
-            ) / data_df["Current Liabilities"]
-        if "Cash And Cash Equivalents" in data_df.columns:
-            performance_ratios["Cash Ratio"] = (
-                data_df["Cash And Cash Equivalents"] / data_df["Current Liabilities"]
-            )
-        performance_ratios["Working Capital"] = (
-            data_df["Current Assets"] - data_df["Current Liabilities"]
-        )  # Corrected working capital calculation
 
-    # Calculate Solvency Ratios
-    if (
-        "Total Liabilities Net Minority Interest" in data_df.columns
-        and "Total Assets" in data_df.columns
-    ):
-        performance_ratios["Debt Ratio"] = (
-            data_df["Total Liabilities Net Minority Interest"] / data_df["Total Assets"]
-        )
-    elif (
-        "Total Liabilities" in data_df.columns and "Total Assets" in data_df.columns
-    ):  # Fallback for 'Total Liabilities'
-        performance_ratios["Debt Ratio"] = (
-            data_df["Total Liabilities"] / data_df["Total Assets"]
-        )
+class CustomFinanceData(Toolkit):
+    """
+    CustomFinanceData is a toolkit for getting financial data
+    and scale the values to 100 crores.
+    """
 
-    # Add more ratios as needed
+    def getFinancialData(self, symbol: str):
+        """Use this function to get fundamental data for a given stock symbol yfinance API.
 
-    return performance_ratios
+        Args:
+            symbol (str): The stock symbol.
+        Returns:
+            str: JSON string of the financial data
+        """
+
+        try:
+            data = yf.get(symbol)
+            return json.dumps(data.to_json())
+        except Exception as e:
+            return f"Failed getting Financials for {symbol}"
+

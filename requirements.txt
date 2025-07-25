@@ -8,6 +8,8 @@ plotly
 
 # UI
 streamlit
+fastapi
+uvicorn
 
 # Data Source
 pypdf
@@ -23,6 +25,9 @@ pytz
 
 # LLM
 agno
+openai
+google-genai
+
 
 langchain
 langchain-community

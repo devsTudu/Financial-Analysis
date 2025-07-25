@@ -7,22 +7,35 @@ from src.statement_analyser import getRatios, getFinancials
 st.markdown("# Main page")
 st.sidebar.markdown("# Where all the dashboards lives 📉")
 
+st.text("Enter the ticker symbol to do petty analysis for free")
 var = st.text_input("Ticker Symbol", "AAPL")
 bs = getFinancials(var)
 ratio = getRatios(var)
 
-raw, perf_ratio, graphs = st.tabs(['Table',
-                                   'Ratios',
-                                   "Graphs"])
+info, raw, perf_ratio, graphs = st.tabs(["info", "Tables", "Ratios", "Graphs"])
+
+with info:
+    st.header("Welcome to the app")
+    st.markdown("""
+        ## Log In
+        
+            Use the left panel to log in as analyst or manager and use the chat bot
+        
+        ## Note
+            
+            The API Keys are required to use chat models
+
+                """)
+
 
 with raw:
     st.header("The Balance Sheet Table")
-    st.badge("In 100 Crores",icon="💵")
+    st.badge("In 100 Crores", icon="💵")
     st.table(bs)
 
 with perf_ratio:
     st.header("The Performance Ratios")
-    st.badge("In 100 Crores",icon="💵")
+    st.badge("In 100 Crores", icon="💵")
     st.table(ratio)
 
 with graphs:
@@ -35,18 +48,18 @@ with graphs:
         fig.add_bar(
             x=ratio.columns,
             y=ratio.loc[ratio_name],
-            marker_color='indianred',
-            text=round(ratio.loc[ratio_name],3),           # Add labels
-            textposition='auto'
+            marker_color="indianred",
+            text=round(ratio.loc[ratio_name], 3),  # Add labels
+            textposition="auto",
         )
         fig.add_trace(
             go.Scatter(
                 x=ratio.columns,
                 y=ratio.loc[ratio_name],
-                mode='lines+markers',
-                name='Trend',
-                marker=dict(color='royalblue'),
-                line=dict(width=2)
+                mode="lines+markers",
+                name="Trend",
+                marker=dict(color="royalblue"),
+                line=dict(width=2),
             )
         )
         fig.update_layout(
@@ -56,7 +69,6 @@ with graphs:
             template="plotly_white",
             height=350,
             width=700,
-            showlegend=False
-            )
+            showlegend=False,
+        )
         st.plotly_chart(fig, use_container_width=True)
-    
