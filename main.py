@@ -12,9 +12,9 @@ password = st.sidebar.text_input("password", type="password")
 st.sidebar.divider()
 
 # Define the Pages
-main_page = st.Page("pages\\mainPage.py", title="Guest Page", icon="🏠")
-analyst_page = st.Page("pages\\analystPage.py", title="Analyst", icon="🕵🏻")
-manager_page = st.Page("pages\\managerPage.py", title="Manager", icon="👨🏻‍💼")
+main_page = st.Page("pages/mainPage.py", title="Guest Page", icon="🏠")
+analyst_page = st.Page("pages/analystPage.py", title="Analyst", icon="🕵🏻")
+manager_page = st.Page("pages/managerPage.py", title="Manager", icon="👨🏻‍💼")
 
 
 log_in = main_page
@@ -39,3 +39,6 @@ if openai_api_key:
     os.environ["OPENAI_API_KEY"] = openai_api_key
 if gemini_api_key:
     os.environ["GOOGLE_API_KEY"] = gemini_api_key
+else:
+    os.environ["GOOGLE_API_KEY"] = st.secrets['GOOGLE_API_KEY']
+    
